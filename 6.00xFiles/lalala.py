@@ -311,3 +311,15 @@ import random
 ##        self._firstName = str(fullName.split(' ')[0])
 ##        self._surName = str(fullName.split(' ')[1])
 
+import random
+tots = [0.00]*3
+maxVals = [0.0]*3
+mean = 100.0
+stdDevs = [0.0, 20.0, 40.0]
+for i in range(10):
+    for j in range(len(tots)):
+        next = random.gauss(mean, stdDevs[j])
+        print next
+        tots[j] += next
+        if next > maxVals[j]:
+            maxVals[j] = next
