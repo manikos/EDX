@@ -20,20 +20,20 @@ class simpleKeno(object):
                      (7,12):25, (8,12):150, (9,12):1000, (10,12):2500,
                      (11,12):25000, (12,12):1000000}
     
-    def __init__(self, numbersChoice, eightyNumbers=80, twentyNumbers=20):
+    def __init__(self, categoryGame, eightyNumbers=80, twentyNumbers=20):
         """
         Initializes the instance with 3 parameters.
-        numbersChoice: How many numbers the user will play (1 to 12)
+        categoryGame: How many numbers the user will play (1 to 12)
         maxNum: Represents all the possible numbers. Usually is equal to 80
         twentyNumbers: The amount of lucky numbers, usually 20
         """
-        self.numbersChoice = numbersChoice
+        self.categoryGame = categoryGame
         self.eightyNumbers = range(1, eightyNumbers+1)
         self.twentyNumbers = twentyNumbers
 
     ##START---Getter Methods
-    def getNumbersChoice(self):
-        return self.numbersChoice
+    def getCategoryGame(self):
+        return self.categoryGame
 
     def getEightyNumbers(self):
         return self.eightyNumbers
@@ -42,7 +42,7 @@ class simpleKeno(object):
         return self.twentyNumbers
     ###END---Getter Methods
 
-    def fillerList(self, numbersChoice):
+    def fillerList(self, categoryGame):
         """
         Fills a list with a specific amount of numbers
         from 1 to 80 (NOT duplicated)
@@ -53,7 +53,7 @@ class simpleKeno(object):
         """
         import random
         lista = []
-        while len(lista) < numbersChoice:
+        while len(lista) < categoryGame:
             tempNumber = random.choice( self.getEightyNumbers() )
             if tempNumber not in lista:
                 lista.append(tempNumber)
@@ -85,13 +85,31 @@ class simpleKeno(object):
 
         returns: a list with integers, represent successfull hits
         """
-        correctHits = [0]*len(myNumbers)
+        self.correctHits = [0]*len(myNumbers)
     
         for i in range(len(myNumbers)):
             for num in myNumbers[i]:
                 if num in luckyNumbers:
-                    correctHits[i] += 1
-        return correctHits #list of size 12
+                    self.correctHits[i] += 1
+        return self.correctHits #list of size 12
+
+
+    def profit(self, correctHits, columnCost=0.5):
+        """
+        Computes the profit of the player analogous to the
+        game category.
+
+        correctHits: a list of 12 integer elements, showing matches
+        columnCost: a float, usually 0.50 Euros, the cost to participate
+
+        returns: a list of 12 float elements, showing the profit for each game
+        """
+        profitsList = [0.0]*len(self.correctHits)
+        
+        for i in range(len(self.correctHits)):
+            profitsList[i] += simpleKeno.PROFITS_TABLE.get( (self.correctHits[i], i+1), 0)
+
+        return profitsList
         
 
 def playKeno(numTrials):
@@ -102,22 +120,33 @@ def playKeno(numTrials):
     returns: avgHits, a list with the average results
     """
     correctHits = ( pylab.array(12) )*0
+    profitsList = ( pylab.array(12) )*0
     for i in range(numTrials):
-        keno = simpleKeno(12)
-        luckyNumbers, myNumbers = keno.prepareGame()
-        correctHits += keno.correctMatch(luckyNumbers, myNumbers)
+        player = simpleKeno(12)
+        luckyNumbers, myNumbers = player.prepareGame()
+        correctHits += player.correctMatch(luckyNumbers, myNumbers)
+        profitsList += player.profit(correctHits)
+        
     avgHits = correctHits/float(numTrials)
+    avgProfit = profitsList/float(numTrials)
     
-    return avgHits
+    return avgHits, avgProfit
 
 
 def plotKenoResults(numTrials):
-    avgHits = playKeno(numTrials)
-    print avgHits
+    avgHits, avgProfit = playKeno(numTrials)
+    print avgHits, '\n', avgProfit
     xAxis = pylab.array(range(1,13))
-    pylab.figure()
-    pylab.bar(xAxis, avgHits)
-    pylab.xlabel('User numbers choice')
-    pylab.ylabel('Successfull hits')
+    pylab.subplot(2,1,1)
+    #pylab.bar(xAxis, avgHits)
+    pylab.hist(avgHits, bins=len(avgHits), cumulative=True)
+    pylab.xlabel('Number of successful hits')
+    pylab.ylabel('Category game')
+    pylab.grid(True)
+    pylab.subplot(2,1,2)
+    #pylab.bar(xAxis, avgProfit)
+    pylab.hist(avgProfit, bins=len(avgProfit), cumulative=True)
+    pylab.xlabel('Profit Earned (Euros)')
+    pylab.ylabel('Category game')
     pylab.grid(True)
     pylab.show()

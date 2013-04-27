@@ -4,6 +4,7 @@ import time
 import datetime
 import sys
 import copy
+import pylab
 import random
 
 ####ASSERTION
@@ -311,15 +312,32 @@ import random
 ##        self._firstName = str(fullName.split(' ')[0])
 ##        self._surName = str(fullName.split(' ')[1])
 
-import random
-tots = [0.00]*3
-maxVals = [0.0]*3
-mean = 100.0
-stdDevs = [0.0, 20.0, 40.0]
-for i in range(10):
-    for j in range(len(tots)):
-        next = random.gauss(mean, stdDevs[j])
-        print next
-        tots[j] += next
-        if next > maxVals[j]:
-            maxVals[j] = next
+####ALTERNATIVE WAY TO PLOT 2 DIAGRAMS UNDER THE SAME X-AXIS RANGE
+##import random, pylab
+##
+##x = [random.random() for i in xrange(1000)]
+##y = [2*random.random() for i in xrange(1000)]
+##
+### subplot sharing the same axis (http://matplotlib.org/examples/pylab_examples/subplots_demo.html)
+##f, axarr = pylab.subplots(2, sharex=True)
+##
+##print f
+##print axarr
+##
+##axarr[0].plot(x, y , 'bo')
+##axarr[1].hist(y, bins=100)
+##pylab.show()
+##
+###subplot not share the same axis (http://matplotlib.org/examples/pylab_examples/subplot_demo.html)
+##pylab.subplot(211)
+##pylab.plot(x, y)
+##pylab.subplot(212)
+##pylab.hist(y, bins=100)
+##pylab.show()
+x=[]
+for i in range(1000000):
+    x.append(random.random())
+s = sum(x)/len(x)
+print s
+pylab.hist(x, bins=100)
+pylab.show()
