@@ -1,5 +1,6 @@
 #FINDS THE BEST NUMBER CHOICE (OUT OF 12) FOR MAXIMUM PROFIT PLAYING KENO
 import pylab
+import random
 
 class simpleKeno(object):
     """
@@ -51,7 +52,6 @@ class simpleKeno(object):
     
         returns: a list filled with categoryGame numbers
         """
-        import random
         lista = []
         while len(lista) < categoryGame:
             tempNumber = random.choice( self.getEightyNumbers() )
@@ -128,12 +128,12 @@ def playKeno(numTrials):
     """
     correctHits = ( pylab.array(12) )*0
     profitsList = ( pylab.array(12) )*0
-    player = simpleKeno(12)
-    myNumbers = player.preparePlayer()
+    
     #myNumbers = [[1], [2, 3], [4, 5, 6], [7, 8, 9, 10], [11, 12, 1, 2, 3], [4, 5, 6, 7, 8, 9], [10, 11, 12, 1, 2, 3, 4], [5, 6, 7, 8, 9, 10, 11, 12], [1, 2, 3, 4, 5, 6, 7, 8, 9], [10, 11, 12, 1, 2, 3, 4, 5, 6, 7], [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], [12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]]
     
     for i in range(numTrials):
-        
+        player = simpleKeno(12)
+        myNumbers = player.preparePlayer()
         luckyNumbers = player.prepareBoard()
         #luckyNumbers = range(1,21)
         correctHits += player.correctMatch(luckyNumbers, myNumbers)
@@ -148,23 +148,24 @@ def playKeno(numTrials):
 def plotKenoResults(numTrials):
     avgHits, avgProfit = playKeno(numTrials)
     print avgHits, '\n', avgProfit
+    #Set the x-axis
     xAxis = pylab.array(range(1,13))
-    #print xAxis
+    #First plot design
     pylab.subplot(2,1,1)
     pylab.bar(xAxis, avgHits, align='center', edgecolor='black')
     pylab.xlim(0,13)
-    xmin, xmax = pylab.xlim()
     ymin, ymax = pylab.ylim()
-    pylab.title('KENO GAME -- Results of successful hits and profits over 1000 trials')
+    pylab.title('***KENO GAME***\n Results of successful hits and profits over 100,000 trials')
     pylab.xlabel('Category game')
     pylab.ylabel('Number of successful hits')
-    pylab.text(0.5, ymax-1.8, 'Max hits=' + str(int(avgHits.max())) + ' in category ' + str(list(avgHits).index(avgHits.max())+1),  )
+    pylab.text(0.5, ymax-(ymax-ymin)/8, 'Max hits=' + str(int(avgHits.max())) + ' in category ' + str(list(avgHits).index(avgHits.max())+1),  )
     pylab.grid(True)
+    #Second plot design
     pylab.subplot(2,1,2)
-    pylab.hist(avgHits, bins=len(avgHits), cumulative=True)
-    #pylab.bar(xAxis, avgProfit)
-##    pylab.hist(avgProfit, bins=len(avgProfit), cumulative=True)
-##    pylab.xlabel('Profit Earned (Euros)')
-##    pylab.ylabel('Category game')
+    pylab.bar(xAxis, avgProfit, align='center', edgecolor='black')
+    pylab.xlim(0,13)
+    #pylab.hist(avgProfit, bins=len(avgProfit), cumulative=True)
+    pylab.xlabel('Category game')
+    pylab.ylabel('Profit Earned (euros)')
     pylab.grid(True)
     pylab.show()
