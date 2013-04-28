@@ -49,7 +49,7 @@ class simpleKeno(object):
 
         numbersChoice: integer, amount of different numbers
     
-        returns: a sorted list
+        returns: a list filled with categoryGame numbers
         """
         import random
         lista = []
@@ -57,24 +57,31 @@ class simpleKeno(object):
             tempNumber = random.choice( self.getEightyNumbers() )
             if tempNumber not in lista:
                 lista.append(tempNumber)
-        return sorted(lista)
+        return lista
 
 
-    def prepareGame(self):
+    def preparePlayer(self):
         """
-        Prepares the game. That is, stochastically fills
-        the lucky 20 numbers, luckyNumbers, in range [1,80]
-        and stochastically fills user's numbers, myNumbers,
-        which varies in size (1 to 12) in range [1,80].
+        Prepares the player. That is, stochastically fills
+        user's numbers, myNumbers, which varies in size
+        (1 to 12) in range [1,80].
         
-        returns: luckyNumbers (list), myNumbers (list in list)
+        returns: myNumbers (list in list)
         """
-        self.luckyNumbers = self.fillerList(self.getTwentyNumbers())
-        self.myNumbers = []
-        for i in range(1,13):
-            self.myNumbers.append(self.fillerList(i))
+        myNumbers = []
+        for i in range(1, self.getCategoryGame()+1):
+            myNumbers.append(self.fillerList(i))
 
-        return self.luckyNumbers, self.myNumbers
+        return myNumbers
+
+    def prepareBoard(self):
+        """
+        Prepares the board. That is, stochastically fills
+        the lucky 20 numbers in range [1,80]
+        
+        returns: a list with the 20 lucky numbers out of 80
+        """
+        return self.fillerList(self.getTwentyNumbers())
 
 
     def correctMatch(self, luckyNumbers, myNumbers):
@@ -121,9 +128,14 @@ def playKeno(numTrials):
     """
     correctHits = ( pylab.array(12) )*0
     profitsList = ( pylab.array(12) )*0
+    player = simpleKeno(12)
+    myNumbers = player.preparePlayer()
+    #myNumbers = [[1], [2, 3], [4, 5, 6], [7, 8, 9, 10], [11, 12, 1, 2, 3], [4, 5, 6, 7, 8, 9], [10, 11, 12, 1, 2, 3, 4], [5, 6, 7, 8, 9, 10, 11, 12], [1, 2, 3, 4, 5, 6, 7, 8, 9], [10, 11, 12, 1, 2, 3, 4, 5, 6, 7], [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], [12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]]
+    
     for i in range(numTrials):
-        player = simpleKeno(12)
-        luckyNumbers, myNumbers = player.prepareGame()
+        
+        luckyNumbers = player.prepareBoard()
+        #luckyNumbers = range(1,21)
         correctHits += player.correctMatch(luckyNumbers, myNumbers)
         profitsList += player.profit(correctHits)
         
@@ -137,16 +149,22 @@ def plotKenoResults(numTrials):
     avgHits, avgProfit = playKeno(numTrials)
     print avgHits, '\n', avgProfit
     xAxis = pylab.array(range(1,13))
+    #print xAxis
     pylab.subplot(2,1,1)
-    #pylab.bar(xAxis, avgHits)
-    pylab.hist(avgHits, bins=len(avgHits), cumulative=True)
-    pylab.xlabel('Number of successful hits')
-    pylab.ylabel('Category game')
+    pylab.bar(xAxis, avgHits, align='center', edgecolor='black')
+    pylab.xlim(0,13)
+    xmin, xmax = pylab.xlim()
+    ymin, ymax = pylab.ylim()
+    pylab.title('KENO GAME -- Results of successful hits and profits over 1000 trials')
+    pylab.xlabel('Category game')
+    pylab.ylabel('Number of successful hits')
+    pylab.text(0.5, ymax-1.8, 'Max hits=' + str(int(avgHits.max())) + ' in category ' + str(list(avgHits).index(avgHits.max())+1),  )
     pylab.grid(True)
     pylab.subplot(2,1,2)
+    pylab.hist(avgHits, bins=len(avgHits), cumulative=True)
     #pylab.bar(xAxis, avgProfit)
-    pylab.hist(avgProfit, bins=len(avgProfit), cumulative=True)
-    pylab.xlabel('Profit Earned (Euros)')
-    pylab.ylabel('Category game')
+##    pylab.hist(avgProfit, bins=len(avgProfit), cumulative=True)
+##    pylab.xlabel('Profit Earned (Euros)')
+##    pylab.ylabel('Category game')
     pylab.grid(True)
     pylab.show()
