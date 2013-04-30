@@ -1,14 +1,13 @@
 def genPrimes():
     '''returns the sequence of prime numbers on successive calls
     to its next() method: 2, 3, 5, 7, 11, ...'''
-    n=2
+    number = 1
     while True:
-        checkList=[]
-        for i in range(1,n-1):
-            if n%(i+1)!=0:
-                checkList.append(n%(i+1))
-            else:
-                checkList.append(0)
-        if checkList.count(0)==0:
-            yield n
-        n+=1
+        isPrime = True
+        number += 1
+        for i in range(2, int(number/2)+1):
+            if number%i == 0:
+                isPrime = False
+                break
+        if isPrime:
+            yield number

@@ -334,10 +334,17 @@ import random
 ##pylab.subplot(212)
 ##pylab.hist(y, bins=100)
 ##pylab.show()
-x=[]
-for i in range(1000000):
-    x.append(random.random())
-s = sum(x)/len(x)
-print s
-pylab.hist(x, bins=100)
-pylab.show()
+
+####GENERATORS
+##def genPrimes():
+##    number = 1
+##    while True:
+##        isPrime = True
+##        number += 1
+##        for i in range(2, int(number/2)+1):
+##            if number%i == 0:
+##                isPrime = False
+##                break
+##        if isPrime:
+##            yield number
+        
