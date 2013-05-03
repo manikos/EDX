@@ -4,8 +4,8 @@ import time
 import datetime
 import sys
 import copy
-import pylab
 import random
+import pylab
 
 ####ASSERTION
 ##while True:
@@ -222,7 +222,7 @@ import random
 ##        print "B.y"
 ##    def z(self):
 ##        print "B.z"
-
+##
 ##class C(object):
 ##    def __init__(self):
 ##        self.a = 4
@@ -312,6 +312,23 @@ import random
 ##        self._firstName = str(fullName.split(' ')[0])
 ##        self._surName = str(fullName.split(' ')[1])
 
+####GENERATORS
+##def generator1():
+##    if True:
+##        yield 1 
+##
+##def generator2():
+##    if False:   
+##        yield 1
+##
+##g1 = generator1()
+##g2 = generator2()
+##
+##print type(g1)
+##print type(g2)
+##print g1.next()
+##print g2.next()
+
 ####ALTERNATIVE WAY TO PLOT 2 DIAGRAMS UNDER THE SAME X-AXIS RANGE
 ##import random, pylab
 ##
@@ -335,16 +352,44 @@ import random
 ##pylab.hist(y, bins=100)
 ##pylab.show()
 
-####GENERATORS
-##def genPrimes():
-##    number = 1
-##    while True:
-##        isPrime = True
-##        number += 1
-##        for i in range(2, int(number/2)+1):
-##            if number%i == 0:
-##                isPrime = False
-##                break
-##        if isPrime:
-##            yield number
-        
+####PYLAB SUM OF 2 DISTRIBUTIONS GIVES UNIFORM DISTRIBUTION
+##vals1, vals2, vals = [], [], []
+##for i in range(1000):
+##    num1=random.choice(range(1,50))
+##    num2=random.choice(range(1,50))
+##    vals1.append(num1)
+##    vals2.append(num2)
+##    vals.append(vals1[i]+vals2[i])
+###print 'len(vals1)=', len(vals1), 'len(vals2)=', len(vals2), 'len(vals)=', len(vals)
+###print sorted(vals1), '\n', sorted(vals2), '\n', sorted(vals)
+###print (vals1), '\n', (vals2), '\n', (vals)#, '\n', sorted(vals)
+##pylab.subplot(3,1,1)
+##pylab.plot(range(1000), vals1, 'bo')
+##pylab.subplot(3,1,2)
+##pylab.plot(range(1000), vals2, 'ro')
+##pylab.subplot(3,1,3)
+##pylab.plot(range(1000), vals, 'mo')
+##pylab.show()
+
+####POWER-SET. COMBINATIONS OF N-ELEMENTS TO FIT IN 1 BAG
+##def myPowerSet(iterative):
+##    """
+##    Given an iterative object (list, tuple, string), computes all
+##    the possible subsets (combinations) that can be formed in order
+##    to fit in a single bag. That is, an element can be either
+##    inside the bag (value=1) or not (value=0).
+##
+##    yields: a list which contains the subset
+##    """
+##    length = len(iterative)
+##    combinations = 2**length
+##    for combo in range(combinations):
+##        bag = []
+##        binary = bin(combo)[2:]
+##        if len(binary) != length:
+##               binary = '0'* (length - len(binary)) + binary
+##        for test in range(len(binary)): #binary is in form '010', or '1101' etc.
+##            if binary[test]=='1':
+##                bag.append(iterative[test])
+##        yield bag
+
