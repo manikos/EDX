@@ -393,3 +393,23 @@ import pylab
 ##                bag.append(iterative[test])
 ##        yield bag
 
+####UNDERSTANDING POLYFIT AND POLYVAL METHODS
+##x = [1, 1.5, 2, 3, 5, 5.5, 7, 9, 10]
+##y = [2, 4, 7, 3, 1, 5, 8, 9, 6]
+##new_x = pylab.linspace(1, 10)
+##coeffs1 = pylab.polyfit(x, y, 1)
+##coeffs3 = pylab.polyfit(x, y, 3)
+##coeffs5 = pylab.polyfit(x, y, 5)
+##new_y1 = pylab.polyval(coeffs1, new_x)
+##new_y3 = pylab.polyval(coeffs3, new_x)
+##new_y5 = pylab.polyval(coeffs5, new_x)
+##pylab.plot(x, y, 'rx', label="Orig. Data")
+##pylab.plot(new_x, new_y1, 'k', label="Order 1")
+##pylab.plot(new_x, new_y3, 'b', label="Order 3")
+##pylab.plot(new_x, new_y5, 'g', label="Order 5")
+##pylab.legend(loc='best')
+##pylab.title('Curve Fits')
+##pylab.xlabel('x-axis')
+##pylab.ylabel('y-axis')
+##pylab.show()
+
