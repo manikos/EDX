@@ -87,20 +87,25 @@ def load_map(mapFilename):
 # be the one that fullfils the above conditions.
 #
 
-def DFS(graph, start, end, path = [], shortest = None):
-    #assumes graph is a Digraph
-    #assumes start and end are nodes in graph
+def DFS(graph, start, end, path = []):
+    """
+    Depth-First Search algorithm
+
+    parameters: graph: instance of WeightedGraph class
+                start, end: instances of Node class
+    Assumes that start+end Nodes are in the graph
+
+    yields: lists (representing all possible paths from start to end)
+    """
     path = path + [start]
-    #print 'Current dfs path:', path
+    #print 'Current DFS path:', path
     if start == end:
-        return path
+        yield path
     for node in graph.childrenOf(start):
         if node not in path: #avoid cycles
-            if shortest == None or len(path)<len(shortest):
-                newPath = DFS(graph,node,end,path)
-                if newPath != None:
-                    shortest = newPath
-    return shortest
+            newPath = DFS(graph, node, end, path)
+            for nPath in newPath:
+                yield nPath
 
 
 def bruteForceSearch(digraph, start, end, maxTotalDist, maxDistOutdoors):    
@@ -127,20 +132,84 @@ def bruteForceSearch(digraph, start, end, maxTotalDist, maxDistOutdoors):
         If there exists no path that satisfies maxTotalDist and
         maxDistOutdoors constraints, then raises a ValueError.
     """
-    start, end = Node(start), Node(end)
-    path = DFS(digraph, start, end)
-    return path
+    gen_paths = DFS(digraph, Node(start), Node(end))
+    valid_paths = []
+    total_dists= []
     
+    for path in gen_paths: #path form: [a,b,c]
+        totald, outd = 0, 0
+        for i in range(len(path)-1): #scan each node except last one
+            indx = list(digraph.edges).index(path[i])
+            nod = list(digraph.edges)[indx]
+            nodes = digraph.edges[nod]
+            for posib_node in nodes: #posib_node form: [b, (3,2)]
+                if posib_node[0] == path[i+1]:
+                    totald += posib_node[1][0]
+                    outd += posib_node[1][1]
+        if totald <= maxTotalDist and outd <= maxDistOutdoors:
+            valid_paths.append(path)
+            total_dists.append(totald)
 
+    if len(valid_paths) == 0:
+        raise ValueError
+    else:
+        str_valid_path = valid_paths[ total_dists.index(min(total_dists)) ]
+        return [ str(p) for p in str_valid_path ]
+
+
+#
 #
 # Problem 4: Finding the Shorest Path using Optimized Search Method
 #
+#
+
+def DFSShortest(graph, start, end, maxTotalDist, maxDistOutdoors, path = [],\
+                distance = None, dist_out = None):
+    """
+    Optimized Depth-First Search algorithm
+
+    parameters: graph: instance of WeightedGraph class
+                start, end: instances of Node class
+    Assumes that start+end Nodes are in the graph
+
+    yields: list (1st element= total distance, 2nd element=path)
+    """
+    path = path + [start]
+    #initialization of the distance & dist_out
+    if (distance is None) or (dist_out is None):
+        distance, dist_out = [], []
+    #if start==end 
+    if start == end:
+        yield sum(distance)
+        yield path
+    for node in graph.childrenOf(start):
+        #avoid cycles AND do not go further if node is the goal
+        if (node not in path) and (start != end):
+            #search and find the appropriate distances (total & outdoor)
+            for n in graph.edges[ list(graph.nodes)[list(graph.nodes).index(Node(start))] ]:
+                if n[0] == node:
+                    distance.append(n[1][0])
+                    dist_out.append(n[1][1])
+            #if constraints are met, compute next path
+            if sum(distance) <= maxTotalDist and sum(dist_out) <= maxDistOutdoors:
+                newPath = DFSShortest(graph, node, end, maxTotalDist, maxDistOutdoors, path, distance, dist_out)
+            #go one level up (for the computation of the next path)
+                distance = distance[:-1]
+                dist_out = dist_out[:-1]
+                for nPath in newPath:
+                    yield nPath
+            #if constraints are not met, go one level up for the next path
+            else:
+                distance = distance[:-1]
+                dist_out = dist_out[:-1]
+                
+
 def directedDFS(digraph, start, end, maxTotalDist, maxDistOutdoors):
     """
-    Finds the shortest path from start to end using directed depth-first.
+    Finds the shortest path from start to end using directed depth-first
     search approach. The total distance travelled on the path must not
     exceed maxTotalDist, and the distance spent outdoor on this path must
-	not exceed maxDistOutdoors.
+    not exceed maxDistOutdoors.
 
     Parameters: 
         digraph: instance of class Digraph or its subclass
@@ -160,8 +229,28 @@ def directedDFS(digraph, start, end, maxTotalDist, maxDistOutdoors):
         If there exists no path that satisfies maxTotalDist and
         maxDistOutdoors constraints, then raises a ValueError.
     """
-    #TODO
-    pass
+    gen_paths = DFSShortest(digraph, Node(start), Node(end), maxTotalDist, maxDistOutdoors)
+    data, total_dists, valid_paths = [], [], []
+    i = 0
+    #fill the lists with the appropriate data (distance & path)
+    #data is in form: [ 34.0, [a,b,c], 54.0, [a,c] ]
+    for path in gen_paths:
+        data.append(path)
+    while i < len(data):
+        if i%2 == 0:
+            total_dists.append(data[i]) #list of floats
+        else:
+            valid_paths.append(data[i]) #list of lists
+        i += 1
+    #return the path bind with the shortest distance else raise ValueError
+    if len(valid_paths) == 0:
+        raise ValueError
+    else:
+        str_valid_path = valid_paths[ total_dists.index(min(total_dists)) ]
+        return [ str(p) for p in str_valid_path ]
+        
+
+mitMap = load_map("mit_map.txt")
 
 # Uncomment below when ready to test
 #### NOTE! These tests may take a few minutes to run!! ####
@@ -288,3 +377,4 @@ def directedDFS(digraph, start, end, maxTotalDist, maxDistOutdoors):
 #     print "Expected: No such path! Should throw a value error."
 #     print "Did brute force search raise an error?", bruteRaisedErr
 #     print "Did DFS search raise an error?", dfsRaisedErr
+

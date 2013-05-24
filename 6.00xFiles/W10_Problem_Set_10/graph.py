@@ -115,62 +115,79 @@ def DFS(graph, start, end, path = []):
     #Assumes graph is a Digraph
     #Assumes start and end are nodes in graph
     path = path + [start]
-    print 'Current DFS path:', path
+    #print 'Current DFS path:', path
     if start == end:
-        return path
+        yield path
     for node in graph.childrenOf(start):
         if node not in path: #avoid cycles
             newPath = DFS(graph, node, end, path)
-            if newPath != None:
-                return newPath
-    return None
-
-def DFSShortest(graph, start, end, path = [], shortest = None):
-    #assumes graph is a Digraph
-    #assumes start and end are nodes in graph
-    path = path + [start]
-    print 'Current dfs path:', path
-    if start == end:
-        return path
-    for node in graph.childrenOf(start):
-        if node not in path: #avoid cycles
-            if shortest == None or len(path) < len(shortest):
-                newPath = DFSShortest(graph, node, end, path)
-                if newPath != None:
-                    shortest = newPath
-    return shortest
+            for newpath in newPath:
+                yield newpath
 
 
-na = Node('a')
-nb = Node('b')
-nc = Node('c')
-nd = Node('d')
-ne = Node('e')
-nf = Node('f')
-g = WeightedDigraph()
-g.addNode(na)
-g.addNode(nb)
-g.addNode(nc)
-g.addNode(nd)
-g.addNode(ne)
-g.addNode(nf)
-e1 = WeightedEdge(na,nb,15,10)
-e2 = WeightedEdge(na,nc,14,6)
-e3 = WeightedEdge(nb,nc,3,1)
-e4 = WeightedEdge(nb,ne,7,4)
-e5 = WeightedEdge(ne,nf,23,20)
-e6 = WeightedEdge(nf,nd,8,5)
-e7 = WeightedEdge(nd,ne,11,10)
-e8 = WeightedEdge(ne,nc,10,5)
-g.addEdge(e1)
-g.addEdge(e2)
-g.addEdge(e3)
-g.addEdge(e4)
-g.addEdge(e5)
-g.addEdge(e6)
-g.addEdge(e7)
-g.addEdge(e8)
 
+##-------------------------------
+##n1 = Node('1')
+##n2 = Node('2')
+##n3 = Node('3')
+##n4 = Node('4')
+##n5 = Node('5')
+##n6 = Node('6')
+##g = WeightedDigraph()
+##g.addNode(n1)
+##g.addNode(n2)
+##g.addNode(n3)
+##g.addNode(n4)
+##g.addNode(n5)
+##g.addNode(n6)
+##e1 = WeightedEdge(n1,n2,5,2)
+##e2 = WeightedEdge(n2,n3,20,10)
+##e3 = WeightedEdge(n2,n4,10,5)
+##e4 = WeightedEdge(n3,n5,6,3)
+##e5 = WeightedEdge(n4,n3,2,1)
+##e6 = WeightedEdge(n4,n5,20,10)
+##g.addEdge(e1)
+##g.addEdge(e2)
+##g.addEdge(e3)
+##g.addEdge(e4)
+##g.addEdge(e5)
+##g.addEdge(e6)
+
+##-----------------------------------
+##na = Node('a')
+##nb = Node('b')
+##nc = Node('c')
+##nd = Node('d')
+##ne = Node('e')
+##nf = Node('f')
+##g = WeightedDigraph()
+##g.addNode(na)
+##g.addNode(nb)
+##g.addNode(nc)
+##g.addNode(nd)
+##g.addNode(ne)
+##g.addNode(nf)
+##e1 = WeightedEdge(na,nb,15,10)
+##e2 = WeightedEdge(na,nc,14,6)
+##EC = WeightedEdge(nc,ne,14,6)
+##e3 = WeightedEdge(nb,nc,3,1)
+##e4 = WeightedEdge(nb,ne,7,4)
+##e5 = WeightedEdge(ne,nf,23,20)
+##e6 = WeightedEdge(ne,nc,99,99)
+##e7 = WeightedEdge(nf,nd,8,5)
+##e8 = WeightedEdge(nd,ne,11,10)
+##g.addEdge(e1)
+##g.addEdge(e2)
+##g.addEdge(e3)
+##g.addEdge(e4)
+##g.addEdge(e5)
+##g.addEdge(e6)
+##g.addEdge(e7)
+##g.addEdge(e8)
+##g.addEdge(EC)
+
+
+##-------------------------------
 ##g = WeightedDigraph()
 ##
 ##for src in 'abcde':
@@ -181,3 +198,36 @@ g.addEdge(e8)
 ##        g.addNode(desNode)
 ##        edge = WeightedEdge(srcNode,desNode,15,10)
 ##        g.addEdge(edge)
+
+
+na = Node('1')
+nb = Node('2')
+nc = Node('3')
+nd = Node('4')
+##ne = Node('e')
+##nf = Node('f')
+g = WeightedDigraph()
+g.addNode(na)
+g.addNode(nb)
+g.addNode(nc)
+g.addNode(nd)
+##g.addNode(ne)
+##g.addNode(nf)
+e1 = WeightedEdge(na,nb,10,5)
+e2 = WeightedEdge(na,nd,5,1)
+e3 = WeightedEdge(nb,nc,8,5)
+e4 = WeightedEdge(nd,nc,8,5)
+##e5 = WeightedEdge(ne,nf,23,20)
+##e6 = WeightedEdge(ne,nc,99,99)
+##e7 = WeightedEdge(nf,nd,8,5)
+##e8 = WeightedEdge(nd,ne,11,10)
+g.addEdge(e1)
+g.addEdge(e2)
+g.addEdge(e3)
+g.addEdge(e4)
+##g.addEdge(e5)
+##g.addEdge(e6)
+##g.addEdge(e7)
+##g.addEdge(e8)
+##g.addEdge(EC)
+
