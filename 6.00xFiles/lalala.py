@@ -1,11 +1,4 @@
-import math
-import string
-import time
-import datetime
-import sys
-import copy
-import random
-import pylab
+import math, string, time, datetime, sys, copy, random, pylab
 
 ####ASSERTION
 ##while True:
@@ -413,6 +406,7 @@ import pylab
 ##pylab.ylabel('y-axis')
 ##pylab.show()
 
+
 ####UNDERSTANDING __hash__
 ##class Node(object):
 ##    def __init__(self, name):
@@ -447,14 +441,55 @@ import pylab
 ### 3) you will see difference
 ### 4) comment out __eq__ method and run the code
 ### 5) you will see difference
-pwd = 'QwErTy911poqqqq'
-test1, test2, test3 = False, False, False
-if len(pwd)>=10:
-    for c in pwd:
-        if c in string.digits:
-            test1 = True
-        if c in string.ascii_uppercase:
-            test2 = True
-        if c in string.ascii_lowercase:
-            test3 = True
-print test1 and test2 and test3
+
+
+
+####MEMOIZATION
+##def memoize(f):
+##    # define "wrapper" function that checks cache for
+##    # previously computed answer, only calling f if this
+##    # is a new problem.
+##    def memf(x):
+##        print 'x=', x
+##        if x not in memf.cache:
+##            memf.cache[x] = f(x)
+##            print 'memf.cache=', memf.cache
+##        return memf.cache[x]
+##
+##    # initialize wrapper function's cache.
+##    memf.cache = {} #function's attribute
+##    return memf
+
+####FIBONACCI SERIES
+##def fib(n):
+##    if n <= 1:
+##        return 1
+##    else:
+##        return fib(n-1) + fib(n-2)
+
+
+####CHANGE COINS
+total = 2
+coins = [1,2,3,4]
+def countChange(total, coins):
+    #base case, total has reached 0, so we have found one way
+    #to make this total using coins
+    if total == 0:
+        return 1
+    #base case, total is less than 0, the last coin we tried
+    #was too big, so this is a dead end
+    if total < 0:
+        return 0
+    #base case, if we have no more coins to use, and there is
+    #still total amount left, then again we have dead end
+    if len(coins) == 0 and total >=1:
+        return 0
+    print '#Will call num_ways_without_last_coin with: total=' , total, 'coins=', coins[:-1]
+
+    num_ways_without_last_coin = countChange(total, coins[:-1])
+    print num_ways_without_last_coin
+    print '*Will call num_ways_USING_last_coin with: total=' , total-coins[-1], 'coins=', coins
+    num_ways_using_last_coin = countChange(total-coins[-1], coins)
+    print num_ways_using_last_coin
+
+    return num_ways_without_last_coin + num_ways_using_last_coin
