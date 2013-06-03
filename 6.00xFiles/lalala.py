@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import math, string, time, datetime, sys, copy, random, pylab
 
 ####ASSERTION
@@ -365,26 +366,26 @@ import math, string, time, datetime, sys, copy, random, pylab
 ##pylab.show()
 
 ####POWER-SET. COMBINATIONS OF N-ELEMENTS TO FIT IN 1 BAG
-##def myPowerSet(iterative):
-##    """
-##    Given an iterative object (list, tuple, string), computes all
-##    the possible subsets (combinations) that can be formed in order
-##    to fit in a single bag. That is, an element can be either
-##    inside the bag (value=1) or not (value=0).
-##
-##    yields: a list which contains the subset
-##    """
-##    length = len(iterative)
-##    combinations = 2**length
-##    for combo in range(combinations):
-##        bag = []
-##        binary = bin(combo)[2:]
-##        if len(binary) != length:
-##               binary = '0'* (length - len(binary)) + binary
-##        for test in range(len(binary)): #binary is in form '010', or '1101' etc.
-##            if binary[test]=='1':
-##                bag.append(iterative[test])
-##        yield bag
+def myPowerSet(iterative):
+    """
+    Given an iterative object (list, tuple, string), computes all
+    the possible subsets (combinations) that can be formed in order
+    to fit in a single bag. That is, an element can be either
+    inside the bag (value=1) or not (value=0).
+
+    yields: a list which contains the subset
+    """
+    length = len(iterative)
+    combinations = 2**length
+    for combo in range(combinations):
+        bag = []
+        binary = bin(combo)[2:]
+        if len(binary) != length:
+               binary = '0'* (length - len(binary)) + binary
+        for test in range(len(binary)): #binary is in form '010', or '1101' etc.
+            if binary[test]=='1':
+                bag.append(iterative[test])
+        yield bag
 
 ####UNDERSTANDING POLYFIT AND POLYVAL METHODS
 ##x = [1, 1.5, 2, 3, 5, 5.5, 7, 9, 10]
@@ -445,20 +446,20 @@ import math, string, time, datetime, sys, copy, random, pylab
 
 
 ####MEMOIZATION
-##def memoize(f):
-##    # define "wrapper" function that checks cache for
-##    # previously computed answer, only calling f if this
-##    # is a new problem.
-##    def memf(x):
+def memoize(f):
+    # define "wrapper" function that checks cache for
+    # previously computed answer, only calling f if this
+    # is a new problem.
+    def memf(*x):
 ##        print 'x=', x
-##        if x not in memf.cache:
-##            memf.cache[x] = f(x)
-##            print 'memf.cache=', memf.cache
-##        return memf.cache[x]
-##
-##    # initialize wrapper function's cache.
-##    memf.cache = {} #function's attribute
-##    return memf
+        if x not in memf.cache:
+            memf.cache[x] = f(*x)
+##            print 'memf.cache[', x, ']=', memf.cache[x]
+        return memf.cache[x]
+
+    # initialize wrapper function's cache.
+    memf.cache = {} #function's attribute
+    return memf
 
 ####FIBONACCI SERIES
 ##def fib(n):
@@ -469,27 +470,90 @@ import math, string, time, datetime, sys, copy, random, pylab
 
 
 ####CHANGE COINS
-total = 2
-coins = [1,2,3,4]
-def countChange(total, coins):
-    #base case, total has reached 0, so we have found one way
-    #to make this total using coins
-    if total == 0:
-        return 1
-    #base case, total is less than 0, the last coin we tried
-    #was too big, so this is a dead end
-    if total < 0:
-        return 0
-    #base case, if we have no more coins to use, and there is
-    #still total amount left, then again we have dead end
-    if len(coins) == 0 and total >=1:
-        return 0
-    print '#Will call num_ways_without_last_coin with: total=' , total, 'coins=', coins[:-1]
+##total = 100
+##coins = (1,2,3,4,5,6)
+##
+##steps = 0
+##def countChange(total, coins):
+##    global steps
+##    steps += 1
+##    
+##    if total == 0: #base case, total has reached 0, so we have found one way
+##                   #to make this total using coins
+##        return 1
+##    
+##    if total < 0: #base case, total is less than 0, the last coin we tried
+##                  #was too big, so this is a dead end
+##        return 0
+##    
+##    if len(coins) == 0 and total >=1: #base case, if we have no more coins to use, and there is
+##                                      #still total amount left, then again we have dead end
+##        return 0
+##
+##    num_ways_without_last_coin = countChange(total, coins[:-1])
+##    num_ways_using_last_coin = countChange(total-coins[-1], coins)
+##
+##    return num_ways_without_last_coin + num_ways_using_last_coin
+##
+##print 'CountChange: Amount=', total, '--- Combos=', countChange(total,coins),\
+##      '--- Steps=', steps
+##
+##steps = 0
+##def countChangeMemo(total, coins, memo=None):
+##    global steps
+##    steps += 1
+##    
+##    if memo is None:
+##        memo = {}
+##    
+##    if total == 0: #base case, total has reached 0, so we have found one way
+##                   #to make this total using coins
+##        return 1
+##    
+##    if total < 0: #base case, total is less than 0, the last coin we tried
+##                  #was too big, so this is a dead end
+##        return 0
+##    
+##    if len(coins) == 0 and total >=1: #base case, if we have no more coins to use, and there is
+##                                      #still total amount left, then again we have dead end
+##        return 0
+##    
+##    if (total, coins[-1]) not in memo:
+##        num_ways_without_last_coin = countChangeMemo(total, coins[:-1], memo)
+##        num_ways_using_last_coin = countChangeMemo(total-coins[-1], coins, memo)
+##        memo[(total, coins[-1])] = num_ways_without_last_coin + num_ways_using_last_coin
+##
+##    return memo[(total, coins[-1])]
+##
+##print 'CountChangeMemo: Amount=', total, '--- Combos=', countChangeMemo(total,coins),\
+##      '--- Steps=', steps
+##
+##steps = 0
+##countChange = memoize(countChange)
+##print 'MEMOIZATION CountChange: Amount=', total, '--- Combos=',\
+##      countChange(total,coins), '--- Steps=', steps
 
-    num_ways_without_last_coin = countChange(total, coins[:-1])
-    print num_ways_without_last_coin
-    print '*Will call num_ways_USING_last_coin with: total=' , total-coins[-1], 'coins=', coins
-    num_ways_using_last_coin = countChange(total-coins[-1], coins)
-    print num_ways_using_last_coin
-
-    return num_ways_without_last_coin + num_ways_using_last_coin
+##balls = []
+##b, w = 0, 0
+##for i in range(1000):
+##    if w >= 500:
+##        balls.append(1)
+##    elif b >= 500:
+##        balls.append(0)
+##    else:
+##        balls.append(random.randint(0,1))
+##    if balls[i] == 0: w += 1
+##    else: b += 1
+##        
+##num_trials = 1000
+##for_plot = [0 for i in range(1, num_trials+1)]
+##
+##for i in range(num_trials):
+##    tries= 0
+##    while True:
+##        tries += 1
+##        if balls[random.randint(0,999)] == 0:
+##            break
+##    for_plot[tries] += 1
+##pylab.plot(for_plot)
+##pylab.show()
