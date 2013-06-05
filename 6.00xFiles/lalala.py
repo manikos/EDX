@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import math, string, time, datetime, sys, copy, random, pylab
 
 ####ASSERTION
@@ -366,26 +365,26 @@ import math, string, time, datetime, sys, copy, random, pylab
 ##pylab.show()
 
 ####POWER-SET. COMBINATIONS OF N-ELEMENTS TO FIT IN 1 BAG
-def myPowerSet(iterative):
-    """
-    Given an iterative object (list, tuple, string), computes all
-    the possible subsets (combinations) that can be formed in order
-    to fit in a single bag. That is, an element can be either
-    inside the bag (value=1) or not (value=0).
-
-    yields: a list which contains the subset
-    """
-    length = len(iterative)
-    combinations = 2**length
-    for combo in range(combinations):
-        bag = []
-        binary = bin(combo)[2:]
-        if len(binary) != length:
-               binary = '0'* (length - len(binary)) + binary
-        for test in range(len(binary)): #binary is in form '010', or '1101' etc.
-            if binary[test]=='1':
-                bag.append(iterative[test])
-        yield bag
+##def myPowerSet(iterative):
+##    """
+##    Given an iterative object (list, tuple, string), computes all
+##    the possible subsets (combinations) that can be formed in order
+##    to fit in a single bag. That is, an element can be either
+##    inside the bag (value=1) or not (value=0).
+##
+##    yields: a list which contains the subset
+##    """
+##    length = len(iterative)
+##    combinations = 2**length
+##    for combo in range(combinations):
+##        bag = []
+##        binary = bin(combo)[2:]
+##        if len(binary) != length:
+##               binary = '0'* (length - len(binary)) + binary
+##        for test in range(len(binary)): #binary is in form '010', or '1101' etc.
+##            if binary[test]=='1':
+##                bag.append(iterative[test])
+##        yield bag
 
 ####UNDERSTANDING POLYFIT AND POLYVAL METHODS
 ##x = [1, 1.5, 2, 3, 5, 5.5, 7, 9, 10]
@@ -533,6 +532,8 @@ def memoize(f):
 ##print 'MEMOIZATION CountChange: Amount=', total, '--- Combos=',\
 ##      countChange(total,coins), '--- Steps=', steps
 
+
+####PROBABILITY OF HITTING WHITE BALL OUT OF 1000 BALLS
 ##balls = []
 ##b, w = 0, 0
 ##for i in range(1000):
@@ -557,3 +558,4 @@ def memoize(f):
 ##    for_plot[tries] += 1
 ##pylab.plot(for_plot)
 ##pylab.show()
+
