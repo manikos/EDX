@@ -7,3 +7,4 @@ def findFront(start):
         return start
     else:
         return findFront(start.getBefore())
+
